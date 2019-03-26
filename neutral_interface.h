@@ -14,7 +14,7 @@ void solve_transport_2d(
     const double dt, const int ntotal_particles,
     int* nparticles,
     const int* neighbours,
-    Kokkos::View<Particle* > particles,
+    Particle* particles,
     Kokkos::View<const double *> density,
     Kokkos::View<const double *> edgex,
     Kokkos::View<const double *> edgey,
@@ -40,7 +40,7 @@ size_t inject_particles(const int nparticles, const int global_nx,
     const Kokkos::View<double *> edgex,
     const Kokkos::View<double *> edgey,
     const double initial_energy,
-    Kokkos::View<Particle* >* particles);
+    Particle** particles);
 
 
 // Validates the results of the simulation

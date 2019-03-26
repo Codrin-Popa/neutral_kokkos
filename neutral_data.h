@@ -44,17 +44,17 @@ typedef struct {
 
 // Represents an individual particle
 typedef struct {
-  double x;                // x position in space
-  double y;                // y position in space
-  double omega_x;          // x direction
-  double omega_y;          // y direction
-  double energy;           // energy
-  double weight;           // weight of the particle
-  double dt_to_census;     // the time until census is reached
-  double mfp_to_collision; // the mean free paths until a collision
-  int cellx;               // x position in mesh
-  int celly;               // y position in mesh
-  int dead;                // particle is dead
+  Kokkos::View<double *> x;                // x position in space
+  Kokkos::View<double *> y;                // y position in space
+  Kokkos::View<double *> omega_x;          // x direction
+  Kokkos::View<double *> omega_y;          // y direction
+  Kokkos::View<double *> energy;           // energy
+  Kokkos::View<double *> weight;           // weight of the particle
+  Kokkos::View<double *> dt_to_census;     // the time until census is reached
+  Kokkos::View<double *> mfp_to_collision; // the mean free paths until a collision
+  Kokkos::View<int *> cellx;               // x position in mesh
+  Kokkos::View<int *> celly;               // y position in mesh
+  Kokkos::View<int *> dead;                // particle is dead
 
 } Particle;
 
@@ -62,7 +62,7 @@ typedef struct {
 typedef struct {
   CrossSection* cs_scatter_table;
   CrossSection* cs_absorb_table;
-  Kokkos::View<Particle* > local_particles;
+  Particle* local_particles;
 
   double initial_energy;
 
