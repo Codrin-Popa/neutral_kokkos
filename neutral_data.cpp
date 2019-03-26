@@ -42,10 +42,10 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   const double source_width = values[nkeys - 2] * mesh->width;
   const double source_height = values[nkeys - 1] * mesh->height;
 
-  Kokkos::View<double*> mesh_edgex_0;// = subview(mesh->edgex, mesh->x_off + pad, mesh->x_off + pad + 1);
-  Kokkos::View<double*> mesh_edgey_0;// = subview(mesh->edgey, std::make_pair(mesh->y_off + pad, mesh->y_off + pad + 1));
-  Kokkos::View<double*> mesh_edgex_1;// = subview(mesh->edgex, std::make_pair(local_nx + mesh->x_off + pad, local_nx + mesh->x_off + pad + 1));
-  Kokkos::View<double*> mesh_edgey_1;// = subview(mesh->edgey, std::make_pair(local_ny + mesh->y_off + pad, local_ny + mesh->y_off + pad + 1));
+  Kokkos::View<double*> mesh_edgex_0;
+  Kokkos::View<double*> mesh_edgey_0;
+  Kokkos::View<double*> mesh_edgex_1;
+  Kokkos::View<double*> mesh_edgey_1;
 
   allocate_data(&mesh_edgex_0, 1);
   allocate_data(&mesh_edgey_0, 1);
