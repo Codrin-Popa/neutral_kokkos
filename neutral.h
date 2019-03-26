@@ -121,7 +121,7 @@ inline void add_energy_deposition(
     const double microscopic_cs_total, double* ed);
 
 // Fetch the cross section for a particular energy value
-inline double microscopic_cs_for_energy(Kokkos::View<const double *> keys, 
+inline void microscopic_cs_for_energy(Kokkos::View<const double *> keys, 
                                  Kokkos::View<const double *> values,
                                  const int nentries,
                                  const double p_energy,
