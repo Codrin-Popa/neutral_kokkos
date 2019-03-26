@@ -113,11 +113,12 @@ inline void calc_distance_to_facet(const int global_nx, const double x, const do
                             Kokkos::View<const double *> edgey);
 
 // Calculate the energy deposition in the cell
-inline double calculate_energy_deposition(
+inline void add_energy_deposition(
     const int global_nx, const int nx, const int x_off, const int y_off,
-    Particle* particle, const double inv_ntotal_particles,
-    const double path_length, const double number_density,
-    const double microscopic_cs_absorb, const double microscopic_cs_total);
+    const double p_energy, const double p_weight,
+    const double inv_ntotal_particles, const double path_length,
+    const double number_density, const double microscopic_cs_absorb,
+    const double microscopic_cs_total, double* ed);
 
 // Fetch the cross section for a particular energy value
 inline double microscopic_cs_for_energy(Kokkos::View<const double *> keys, 
