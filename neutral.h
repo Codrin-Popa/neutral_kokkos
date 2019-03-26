@@ -123,8 +123,8 @@ inline double calculate_energy_deposition(
 inline double microscopic_cs_for_energy(Kokkos::View<const double *> keys, 
                                  Kokkos::View<const double *> values,
                                  const int nentries,
-                                 const double energy,
-                                 int* cs_index);
+                                 const double p_energy,
+                                 int* cs_index, double* cs);
 
 inline void generate_random_numbers(const uint64_t pkey, const uint64_t master_key,
                              const uint64_t counter, double* rn0, double* rn1);

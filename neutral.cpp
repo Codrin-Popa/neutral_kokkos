@@ -666,20 +666,20 @@ inline void add_energy_deposition(
 inline double microscopic_cs_for_energy(Kokkos::View<const double *> keys, 
                                  Kokkos::View<const double *> values,
                                  const int nentries,
-                                 const double energy,
-                                 int* cs_index) {
+                                 const double p_energy,
+                                 int* cs_index, double* cs) {
 
   // Use a simple binary search to find the energy group
   int ind = nentries / 2;
   int width = ind / 2;
-  while (energy < keys[ind] || energy >= keys[ind + 1]) {
-    ind += (energy < keys[ind]) ? -width : width;
+  while (p_energy < keys[ind] || p_energy >= keys[ind + 1]) {
+    ind += (p_energy < keys[ind]) ? -width : width;
     width = max(1, width / 2); // To handle odd cases, allows one extra walk
   }
 
   // Return the value linearly interpolated
-  return values[ind] +
-         ((energy - keys[ind]) / (keys[ind + 1] - keys[ind])) *
+  *cs = values[ind] +
+         ((p_energy - keys[ind]) / (keys[ind + 1] - keys[ind])) *
              (values[ind + 1] - values[ind]);
 }
 
