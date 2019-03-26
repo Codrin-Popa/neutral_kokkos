@@ -66,12 +66,12 @@ struct handle_particles {
 
   const Kokkos::View<double *>  energy_deposition_tally;
 
-  Kokkos::View<const double *> cs_scatter_keys;
-  Kokkos::View<const double *> cs_scatter_values;
-  const int cs_scatter_nentries;
-  const Kokkos::View<double *> cs_absorb_keys;
-  const Kokkos::View<double *> cs_absorb_values;
-  const int cs_absorb_nentries;
+  Kokkos::View<const double *> cs_scatter_table_keys;
+  Kokkos::View<const double *> cs_scatter_table_values;
+  const int cs_scatter_table_nentries;
+  const Kokkos::View<double *> cs_absorb_table_keys;
+  const Kokkos::View<double *> cs_absorb_table_values;
+  const int cs_absorb_table_nentries;
 
   handle_particles(const int global_nx, const int global_ny, const int nx,
                     const int ny, const uint64_t master_key, const int pad,
@@ -96,9 +96,9 @@ struct handle_particles {
     pad(pad), x_off(x_off), y_off(y_off), initial(initial), dt(dt),
     neighbours(neighbours), density(density), edgex(edgex), edgey(edgey),
     edgedx(edgedx), edgedy(edgedy), ntotal_particles(ntotal_particles),
-    cs_scatter_keys(cs_scatter_keys),  cs_scatter_values(cs_scatter_values), 
-    cs_scatter_nentries(cs_scatter_nentries), cs_absorb_keys(cs_absorb_keys),
-    cs_absorb_values(cs_absorb_values), cs_absorb_nentries(cs_absorb_nentries),
+    cs_scatter_table_keys(cs_scatter_keys),  cs_scatter_table_values(cs_scatter_values), 
+    cs_scatter_table_nentries(cs_scatter_nentries), cs_absorb_table_keys(cs_absorb_keys),
+    cs_absorb_table_values(cs_absorb_values), cs_absorb_table_nentries(cs_absorb_nentries),
     energy_deposition_tally(energy_deposition_tally) {
 
       p_x = particles_start->x;
