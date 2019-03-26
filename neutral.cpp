@@ -117,13 +117,13 @@ struct handle_particles {
 
 
   KOKKOS_INLINE_FUNCTION
-  void operator() (const int pid, value_type& reduction_result) const {
+  void operator() (const int pp, value_type& reduction_result) const {
 
     if (p_dead[pp]) {
-      continue;
+      return;
     }
 
-    nparticles++;
+    reduction_result.nparticles++;
 
     int x_facet = 0;
     int absorb_cs_index = -1;
@@ -184,7 +184,7 @@ struct handle_particles {
           distance_to_collision < distance_to_census) {
 
         // Track the total number of collisions
-        ncollisions++;
+        reduction_result.collisions++;
 
         // Handles a collision event
         int result = collision_event(
@@ -208,7 +208,7 @@ struct handle_particles {
       else if (distance_to_facet < distance_to_census) {
 
         // Track the number of fact encounters
-        nfacets++;
+        reduction_result.facets++;
 
         // Handle facet event
         int result = facet_event(
