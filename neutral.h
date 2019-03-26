@@ -87,7 +87,7 @@ inline void census_event(const int global_nx, const int nx, const int x_off,
 
 // Tallies the energy deposition in the cell
 inline void update_tallies(const int nx, const int x_off, const int y_off,
-                                Particle* particle,
+                                const int p_cellx, const int p_celly,
                                 const double inv_ntotal_particles,
                                 const double energy_deposition,
                                 Kokkos::View<double *> energy_deposition_tally);
