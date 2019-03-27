@@ -99,26 +99,18 @@ struct handle_particles {
     cs_scatter_table_keys(cs_scatter_keys),  cs_scatter_table_values(cs_scatter_values), 
     cs_scatter_table_nentries(cs_scatter_nentries), cs_absorb_table_keys(cs_absorb_keys),
     cs_absorb_table_values(cs_absorb_values), cs_absorb_table_nentries(cs_absorb_nentries),
-    energy_deposition_tally(energy_deposition_tally) {
-
-      p_x = particles_start->x;
-      p_y = particles_start->y;
-      p_omega_x = particles_start->omega_x;
-      p_omega_y = particles_start->omega_y;
-      p_energy = particles_start->energy;
-      p_weight = particles_start->weight;
-      p_dt_to_census = particles_start->dt_to_census;
-      p_mfp_to_collision = particles_start->mfp_to_collision;
-      p_cellx = particles_start->cellx;
-      p_celly = particles_start->celly;
-      p_dead = particles_start->dead;
-    }
+    energy_deposition_tally(energy_deposition_tally), p_x(particles_start->x),
+    p_y(particles_start->y), p_omega_x(particles_start->omega_x),
+    p_omega_y(particles_start->omega_y), p_energy(particles_start->energy), p_weight(particles_start->weight),
+    p_dt_to_census(particles_start->dt_to_census), p_mfp_to_collision(particles_start->mfp_to_collision),
+    p_cellx(particles_start->cellx), p_celly(particles_start->celly), p_dead(particles_start->dead)
+    {}
 
 
 
   KOKKOS_INLINE_FUNCTION
   void operator() (const int pp, value_type& reduction_result) const {
-
+    
     if (p_dead[pp]) {
       return;
     }
@@ -134,12 +126,13 @@ struct handle_particles {
     int cellx = p_cellx[pp] - x_off + pad;
     int celly = p_celly[pp] - y_off + pad;
     double local_density = density[celly * (nx + 2 * pad) + cellx];
-
+    
     // Fetch the cross sections and prepare related quantities
     double microscopic_cs_scatter; 
     microscopic_cs_for_energy(
         cs_scatter_table_keys, cs_scatter_table_values,
         cs_scatter_table_nentries, p_energy[pp], &scatter_cs_index, &microscopic_cs_scatter);
+
     double microscopic_cs_absorb; 
     microscopic_cs_for_energy(
         cs_absorb_table_keys, cs_absorb_table_values, cs_absorb_table_nentries,
@@ -292,13 +285,13 @@ void solve_transport_2d(
   const int cs_absorb_nentries = cs_absorb_table->nentries;
 
 
-
   // Call reduction
   handle_particles f(global_nx, global_ny, nx, ny, master_key, pad, x_off, y_off,
                       1, dt, neighbours, density, edgex, edgey, edgedx, edgedy,
                       ntotal_particles, particles, cs_scatter_keys,
                       cs_scatter_values, cs_scatter_nentries, cs_absorb_keys,
                       cs_absorb_values, cs_absorb_nentries, energy_deposition_tally);
+  
   Kokkos::parallel_reduce("reduction", *nparticles, f, result);
 
   Kokkos::fence();
@@ -307,7 +300,7 @@ void solve_transport_2d(
   *facet_events += result.facets;
   *collision_events += result.collisions;
 
-  printf("Particles  %llu\n", result.nparticles);
+  printf("Particles  %llu\n", *nparticles);
 
 }
 
@@ -661,7 +654,7 @@ inline void add_energy_deposition(
 }
 
 // Fetch the cross section for a particular energy value
-inline double microscopic_cs_for_energy(Kokkos::View<const double *> keys, 
+inline void microscopic_cs_for_energy(Kokkos::View<const double *> keys, 
                                  Kokkos::View<const double *> values,
                                  const int nentries,
                                  const double p_energy,
@@ -674,7 +667,7 @@ inline double microscopic_cs_for_energy(Kokkos::View<const double *> keys,
     ind += (p_energy < keys[ind]) ? -width : width;
     width = max(1, width / 2); // To handle odd cases, allows one extra walk
   }
-
+  
   // Return the value linearly interpolated
   *cs = values[ind] +
          ((p_energy - keys[ind]) / (keys[ind + 1] - keys[ind])) *
