@@ -42,14 +42,21 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   const double source_width = values[nkeys - 2] * mesh->width;
   const double source_height = values[nkeys - 1] * mesh->height;
 
-  Kokkos::View<double*>::HostMirror mesh_edgex;
-  Kokkos::View<double*>::HostMirror mesh_edgey;
+  Kokkos::View<double*> mesh_edgex_0;
+  Kokkos::View<double*> mesh_edgey_0;
+  Kokkos::View<double*> mesh_edgex_1;
+  Kokkos::View<double*> mesh_edgey_1;
 
-  allocate_host_data(&mesh_edgex, (mesh->local_nx + 1));
-  allocate_host_data(&mesh_edgey, (mesh->local_ny + 1));
+  allocate_data(&mesh_edgex_0, 1);
+  allocate_data(&mesh_edgey_0, 1);
+  allocate_data(&mesh_edgex_1, 1);
+  allocate_data(&mesh_edgey_1, 1);
 
-  copy_buffer_RECEIVE((mesh->local_nx + 1), &mesh->edgex, &mesh_edgex);
-  copy_buffer_RECEIVE((mesh->local_ny + 1), &mesh->edgey, &mesh_edgey);
+  mesh_edgex_0[0] = mesh->edgex[mesh->x_off + pad];
+  mesh_edgey_0[0] = mesh->edgey[mesh->y_off + pad];
+  mesh_edgex_1[0] = mesh->edgex[local_nx + mesh->x_off + pad];
+  mesh_edgey_1[0] = mesh->edgey[local_ny + mesh->y_off + pad];
+ 
 
   Kokkos::View<double*>::HostMirror rank_xpos_0;
   Kokkos::View<double*>::HostMirror rank_ypos_0;
@@ -60,10 +67,10 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   allocate_host_data(&rank_xpos_1, 1);
   allocate_host_data(&rank_ypos_1, 1);
 
-  mesh_edgex_0[0] = mesh_edgex[mesh->x_off + pad];
-  mesh_edgey_0[0] = mesh_edgey[mesh->y_off + pad];
-  mesh_edgex_1[0] = mesh_edgex[local_nx + mesh->x_off + pad];
-  mesh_edgey_1[0] = mesh_edgey[local_ny + mesh->y_off + pad];
+  copy_buffer_RECEIVE(1, &mesh_edgex_0, &rank_xpos_0);
+  copy_buffer_RECEIVE(1, &mesh_edgey_0, &rank_ypos_0);
+  copy_buffer_RECEIVE(1, &mesh_edgex_1, &rank_xpos_1);
+  copy_buffer_RECEIVE(1, &mesh_edgey_1, &rank_ypos_1);
 
   // Calculate the shaded bounds
   const double local_particle_left_off = max(0.0, source_xpos - rank_xpos_0[0]);
