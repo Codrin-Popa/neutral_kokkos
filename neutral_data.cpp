@@ -52,11 +52,12 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   allocate_data(&mesh_edgex_1, 1);
   allocate_data(&mesh_edgey_1, 1);
 
-  mesh_edgex_0[0] = mesh->edgex[mesh->x_off + pad];
-  mesh_edgey_0[0] = mesh->edgey[mesh->y_off + pad];
-  mesh_edgex_1[0] = mesh->edgex[local_nx + mesh->x_off + pad];
-  mesh_edgey_1[0] = mesh->edgey[local_ny + mesh->y_off + pad];
- 
+  Kokkos::parallel_for(1, KOKKOS_LAMBDA (int pp) {
+    mesh_edgex_0[0] = mesh->edgex[mesh->x_off + pad];
+    mesh_edgey_0[0] = mesh->edgey[mesh->y_off + pad];
+    mesh_edgex_1[0] = mesh->edgex[local_nx + mesh->x_off + pad];
+    mesh_edgey_1[0] = mesh->edgey[local_ny + mesh->y_off + pad];
+  });
 
   Kokkos::View<double*>::HostMirror rank_xpos_0;
   Kokkos::View<double*>::HostMirror rank_ypos_0;
