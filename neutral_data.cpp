@@ -47,10 +47,10 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   Kokkos::View<double*> mesh_edgex_1;
   Kokkos::View<double*> mesh_edgey_1;
 
-  allocate_data(&mesh_edgex_0, 1);
-  allocate_data(&mesh_edgey_0, 1);
-  allocate_data(&mesh_edgex_1, 1);
-  allocate_data(&mesh_edgey_1, 1);
+  allocate_data(mesh_edgex_0, 1);
+  allocate_data(mesh_edgey_0, 1);
+  allocate_data(mesh_edgex_1, 1);
+  allocate_data(mesh_edgey_1, 1);
 
   Kokkos::parallel_for(1, KOKKOS_LAMBDA (int pp) {
     mesh_edgex_0[0] = mesh->edgex[mesh->x_off + pad];
@@ -63,15 +63,15 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   Kokkos::View<double*>::HostMirror rank_ypos_0;
   Kokkos::View<double*>::HostMirror rank_xpos_1;
   Kokkos::View<double*>::HostMirror rank_ypos_1;
-  allocate_host_data(&rank_xpos_0, 1);
-  allocate_host_data(&rank_ypos_0, 1);
-  allocate_host_data(&rank_xpos_1, 1);
-  allocate_host_data(&rank_ypos_1, 1);
+  allocate_host_data(rank_xpos_0, 1);
+  allocate_host_data(rank_ypos_0, 1);
+  allocate_host_data(rank_xpos_1, 1);
+  allocate_host_data(rank_ypos_1, 1);
 
-  copy_buffer_RECEIVE(1, &mesh_edgex_0, &rank_xpos_0);
-  copy_buffer_RECEIVE(1, &mesh_edgey_0, &rank_ypos_0);
-  copy_buffer_RECEIVE(1, &mesh_edgex_1, &rank_xpos_1);
-  copy_buffer_RECEIVE(1, &mesh_edgey_1, &rank_ypos_1);
+  copy_buffer_RECEIVE(1, mesh_edgex_0, rank_xpos_0);
+  copy_buffer_RECEIVE(1, mesh_edgey_0, rank_ypos_0);
+  copy_buffer_RECEIVE(1, mesh_edgex_1, rank_xpos_1);
+  copy_buffer_RECEIVE(1, mesh_edgey_1, rank_ypos_1);
 
   // Calculate the shaded bounds
   const double local_particle_left_off = max(0.0, source_xpos - rank_xpos_0[0]);
@@ -107,14 +107,14 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   // Rounding hack to make sure correct number of particles is selected
   neutral_data->nlocal_particles = nlocal_particles_real + 0.5;
 
-  size_t allocation = allocate_data(&neutral_data->energy_deposition_tally,
+  size_t allocation = allocate_data(neutral_data->energy_deposition_tally,
                                     local_nx * local_ny);
 
-  allocation += allocate_uint64_data(&neutral_data->nfacets_reduce_array,
+  allocation += allocate_uint64_data(neutral_data->nfacets_reduce_array,
                                      neutral_data->nparticles);
-  allocation += allocate_uint64_data(&neutral_data->ncollisions_reduce_array,
+  allocation += allocate_uint64_data(neutral_data->ncollisions_reduce_array,
                                      neutral_data->nparticles);
-  allocation += allocate_uint64_data(&neutral_data->nprocessed_reduce_array,
+  allocation += allocate_uint64_data(neutral_data->nprocessed_reduce_array,
                                      neutral_data->nparticles);
 
   // Inject some particles into the mesh if we need to
@@ -157,8 +157,8 @@ void read_cs_file(const char* filename, CrossSection* cs, Mesh* mesh) {
 
   Kokkos::View<double*>::HostMirror h_keys;
   Kokkos::View<double*>::HostMirror h_values;
-  allocate_host_data(&h_keys, cs->nentries);
-  allocate_host_data(&h_values, cs->nentries);
+  allocate_host_data(h_keys, cs->nentries);
+  allocate_host_data(h_values, cs->nentries);
 
   for (int ii = 0; ii < cs->nentries; ++ii) {
     // Skip whitespace tokens
@@ -179,8 +179,8 @@ void read_cs_file(const char* filename, CrossSection* cs, Mesh* mesh) {
     fscanf(fp, "%lf", &h_values[ii]);
   }
 
-  move_host_buffer_to_device(cs->nentries, &h_keys, &cs->keys);
-  move_host_buffer_to_device(cs->nentries, &h_values, &cs->values);
+  move_host_buffer_to_device(cs->nentries, h_keys, cs->keys);
+  move_host_buffer_to_device(cs->nentries, h_values, cs->values);
 }
 
 // Initialises the state

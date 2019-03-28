@@ -7,68 +7,60 @@
 #include <stdlib.h>
 
 // Allocates a double precision array
-size_t allocate_data(Kokkos::View<double*>* buf, size_t len) {
+size_t allocate_data(Kokkos::View<double*>& buf, size_t len) {
     if(len == 0) {
         return 0;
     }
 
-    new(buf) Kokkos::View<double*>("device", len);
-
-    Kokkos::View<double*> local_buf(*buf);
+    buf = Kokkos::View<double*>("device", len);
     Kokkos::parallel_for(len, KOKKOS_LAMBDA (int i) {
-        local_buf[i] = 0.0;
+        buf[i] = 0.0;
     });
     Kokkos::fence();
-    
+ 
     return sizeof(double) * len;
 }
 
-size_t allocate_float_data(Kokkos::View<float*>* buf, size_t len) {
+size_t allocate_float_data(Kokkos::View<float*>& buf, size_t len) {
     if(len == 0) {
         return 0;
     }
 
-    new(buf) Kokkos::View<float*>("device", len);
-
-    Kokkos::View<float*> local_buf(*buf);
+    buf = Kokkos::View<float*>("device", len);
     Kokkos::parallel_for(len, KOKKOS_LAMBDA (int i) {
-        local_buf[i] = 0.0f;
+        buf[i] = 0.0f;
     });
     Kokkos::fence();
-    
+ 
     return sizeof(float) * len;
 }
 
 
-size_t allocate_int_data(Kokkos::View<int*>* buf, size_t len) {
+size_t allocate_int_data(Kokkos::View<int*>& buf, size_t len) {
     if(len == 0) {
         return 0;
     }
 
-    new(buf) Kokkos::View<int*>("device", len);
-
-    Kokkos::View<int*> local_buf(*buf);
+    buf = Kokkos::View<int*>("device", len);
     Kokkos::parallel_for(len, KOKKOS_LAMBDA (int i) {
-        local_buf[i] = 0;
+        buf[i] = 0;
     });
     Kokkos::fence();
-    
+ 
     return sizeof(int) * len;
 }
 
-size_t allocate_uint64_data(Kokkos::View<uint64_t*>* buf, size_t len) {
+size_t allocate_uint64_data(Kokkos::View<uint64_t*>& buf, size_t len) {
     if(len == 0) {
         return 0;
     }
 
-    new(buf) Kokkos::View<uint64_t*>("device", len);
-
-    Kokkos::View<uint64_t*> local_buf(*buf);
+    buf = Kokkos::View<uint64_t*>("device", len);
     Kokkos::parallel_for(len, KOKKOS_LAMBDA (int i) {
-        local_buf[i] = 0;
+        buf[i] = 0;
     });
     Kokkos::fence();
-    
+ 
     return sizeof(uint64_t) * len;
 }
 
@@ -93,52 +85,52 @@ void deallocate_uint64_t_data(Kokkos::View<uint64_t*> buf) {
 }
 
 // Allocates some double precision data
-void allocate_host_data(Kokkos::View<double*>::HostMirror* buf, const size_t len) {
+void allocate_host_data(Kokkos::View<double*>::HostMirror& buf, const size_t len) {
     if(len == 0) {
         return;
     }
 
-    new(buf) Kokkos::View<double*>::HostMirror("host", len);
+    buf = Kokkos::View<double*>::HostMirror("host", len);
     
     for (size_t ii = 0; ii < len; ++ii) {
-        (*buf)[ii] = 1.0;
+        buf[ii] = 0.0;
     }
 }
 
 // Allocates some single precision data
-void allocate_host_float_data(Kokkos::View<float*>::HostMirror* buf, const size_t len) {
+void allocate_host_float_data(Kokkos::View<float*>::HostMirror& buf, const size_t len) {
     if(len == 0) {
         return;
     }
 
-    new(buf) Kokkos::View<float*>::HostMirror("host", len);
+    buf = Kokkos::View<float*>::HostMirror("host", len);
     
     for (size_t ii = 0; ii < len; ++ii) {
-        (*buf)[ii] = 0.0f;
+        buf[ii] = 0.0f;
     }
 }
 
-void allocate_host_int_data(Kokkos::View<int*>::HostMirror* buf, const size_t len) {
+void allocate_host_int_data(Kokkos::View<int*>::HostMirror& buf, const size_t len) {
     if(len == 0) {
         return;
     }
 
-    new(buf) Kokkos::View<int*>::HostMirror("host", len);
+    buf = Kokkos::View<int*>::HostMirror("host", len);
     
     for (size_t ii = 0; ii < len; ++ii) {
-        (*buf)[ii] = 0;
+        buf[ii] = 0;
     }
 }
 
-void allocate_host_uint64_t_data(Kokkos::View<uint64_t*>::HostMirror* buf, const size_t len) {
+void allocate_host_uint64_t_data(Kokkos::View<uint64_t*>::HostMirror& buf, const size_t len) {
     if(len == 0) {
         return;
     }
 
-    new(buf) Kokkos::View<uint64_t*>::HostMirror("host", len);
+    buf = Kokkos::View<uint64_t*>::HostMirror("host", len);
     
     for (size_t ii = 0; ii < len; ++ii) {
-        (*buf)[ii] = 0;
+        buf[ii] = 0;
     }
 }
 
@@ -199,26 +191,26 @@ void mesh_data_init_2d(const int local_nx, const int local_ny,
     Kokkos::fence();
 }
 
-void copy_buffer_SEND(const size_t len, Kokkos::View<double*>::HostMirror* src, Kokkos::View<double*>* dst) {
-    deep_copy(*dst, *src);
+void copy_buffer_SEND(const size_t len, Kokkos::View<double*>::HostMirror& src, Kokkos::View<double*>& dst) {
+    deep_copy(dst, src);
 }
 
-void copy_float_buffer_SEND(const size_t len, Kokkos::View<float*>::HostMirror* src, Kokkos::View<float*>* dst) {
-    deep_copy(*dst, *src);
+void copy_float_buffer_SEND(const size_t len, Kokkos::View<float*>::HostMirror& src, Kokkos::View<float*>& dst) {
+    deep_copy(dst, src);
 }
 
-void copy_int_buffer_SEND(const size_t len, Kokkos::View<int*>::HostMirror* src, Kokkos::View<int*>* dst) {
-    deep_copy(*dst, *src);
+void copy_int_buffer_SEND(const size_t len, Kokkos::View<int*>::HostMirror& src, Kokkos::View<int*>& dst) {
+    deep_copy(dst, src);
 }
 
-void copy_buffer_RECEIVE(const size_t len, Kokkos::View<double*>* src, Kokkos::View<double*>::HostMirror* dst) {
-    deep_copy(*dst, *src);
+void copy_buffer_RECEIVE(const size_t len, Kokkos::View<double*>& src, Kokkos::View<double*>::HostMirror& dst) {
+    deep_copy(dst, src);
 }
 
-void move_host_buffer_to_device(const size_t len, Kokkos::View<double*>::HostMirror* src, Kokkos::View<double*>* dst) {
+void move_host_buffer_to_device(const size_t len, Kokkos::View<double*>::HostMirror& src, Kokkos::View<double*>& dst) {
   allocate_data(dst, len);
   copy_buffer_SEND(len, src, dst);
-  deallocate_host_data(*src);
+  deallocate_host_data(src);
 }
 
 // Initialise state data in device specific manner

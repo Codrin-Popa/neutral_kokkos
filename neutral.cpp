@@ -739,17 +739,17 @@ size_t inject_particles(const int nparticles, const int global_nx,
 
   Particle* particle = *particles;
   size_t allocation = 0;
-  allocation += allocate_data(&particle->x, nparticles * 1.5);
-  allocation += allocate_data(&particle->y, nparticles * 1.5);
-  allocation += allocate_data(&particle->omega_x, nparticles * 1.5);
-  allocation += allocate_data(&particle->omega_y, nparticles * 1.5);
-  allocation += allocate_data(&particle->energy, nparticles * 1.5);
-  allocation += allocate_data(&particle->weight, nparticles * 1.5);
-  allocation += allocate_data(&particle->dt_to_census, nparticles * 1.5);
-  allocation += allocate_data(&particle->mfp_to_collision, nparticles * 1.5);
-  allocation += allocate_int_data(&particle->cellx, nparticles * 1.5);
-  allocation += allocate_int_data(&particle->celly, nparticles * 1.5);
-  allocation += allocate_int_data(&particle->dead, nparticles * 1.5);
+  allocation += allocate_data(particle->x, nparticles * 1.5);
+  allocation += allocate_data(particle->y, nparticles * 1.5);
+  allocation += allocate_data(particle->omega_x, nparticles * 1.5);
+  allocation += allocate_data(particle->omega_y, nparticles * 1.5);
+  allocation += allocate_data(particle->energy, nparticles * 1.5);
+  allocation += allocate_data(particle->weight, nparticles * 1.5);
+  allocation += allocate_data(particle->dt_to_census, nparticles * 1.5);
+  allocation += allocate_data(particle->mfp_to_collision, nparticles * 1.5);
+  allocation += allocate_int_data(particle->cellx, nparticles * 1.5);
+  allocation += allocate_int_data(particle->celly, nparticles * 1.5);
+  allocation += allocate_int_data(particle->dead, nparticles * 1.5);
  
   Kokkos::View<double *> p_x = particle->x;
   Kokkos::View<double *> p_y = particle->y;
