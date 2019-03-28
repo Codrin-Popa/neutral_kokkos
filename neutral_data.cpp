@@ -10,10 +10,10 @@
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
 // Reads a cross section file
-// void read_cs_file(const char* filename, CrossSection* cs, Mesh* mesh);
+void read_cs_file(const char* filename, CrossSection* cs, Mesh& mesh);
 
 // Initialises the set of cross sections
-void initialise_cross_sections(NeutralData* neutral_data, Mesh* mesh);
+void initialise_cross_sections(NeutralData* neutral_data, Mesh& mesh);
 
 // Initialises all of the neutral-specific data structures.
 void initialise_neutral_data(NeutralData* neutral_data, Mesh& mesh) {
@@ -134,7 +134,7 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh& mesh) {
 }
 
 // Reads in a cross-sectional data file
-void read_cs_file(const char* filename, CrossSection* cs, Mesh* mesh) {
+void read_cs_file(const char* filename, CrossSection* cs, Mesh& mesh) {
   FILE* fp = fopen(filename, "r");
   if (!fp) {
     TERMINATE("Could not open the cross section file: %s\n", filename);
@@ -184,7 +184,7 @@ void read_cs_file(const char* filename, CrossSection* cs, Mesh* mesh) {
 }
 
 // Initialises the state
-void initialise_cross_sections(NeutralData* neutral_data, Mesh* mesh) {
+void initialise_cross_sections(NeutralData* neutral_data, Mesh& mesh) {
   neutral_data->cs_scatter_table = (CrossSection*)malloc(sizeof(CrossSection));
   neutral_data->cs_absorb_table = (CrossSection*)malloc(sizeof(CrossSection));
   read_cs_file(CS_SCATTER_FILENAME, neutral_data->cs_scatter_table, mesh);
