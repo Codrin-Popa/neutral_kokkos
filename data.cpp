@@ -226,13 +226,13 @@ void set_problem_2d(const int local_nx, const int local_ny, const int pad,
 
     Kokkos::View<int *>::HostMirror h_keys;
     Kokkos::View<int *> d_keys;
-    allocate_int_data(&d_keys, MAX_KEYS);
-    allocate_host_int_data(&h_keys, MAX_KEYS);
+    allocate_int_data(d_keys, MAX_KEYS);
+    allocate_host_int_data(h_keys, MAX_KEYS);
 
     Kokkos::View<double *>::HostMirror h_values;
     Kokkos::View<double *> d_values;
-    allocate_data(&d_values, MAX_KEYS);
-    allocate_host_data(&h_values, MAX_KEYS);
+    allocate_data(d_values, MAX_KEYS);
+    allocate_host_data(h_values, MAX_KEYS);
 
     int nentries = 0;
     while (1) {
@@ -266,8 +266,8 @@ void set_problem_2d(const int local_nx, const int local_ny, const int pad,
       }
     }
 
-    copy_int_buffer_SEND(MAX_KEYS, &h_keys, &d_keys);
-    copy_buffer_SEND(MAX_KEYS, &h_values, &d_values);
+    copy_int_buffer_SEND(MAX_KEYS, h_keys, d_keys);
+    copy_buffer_SEND(MAX_KEYS, h_values, d_values);
 
     Kokkos::parallel_for(local_nx*local_ny, KOKKOS_LAMBDA (const int i)
     {
