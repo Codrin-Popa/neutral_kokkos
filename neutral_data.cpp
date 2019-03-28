@@ -16,10 +16,10 @@
 void initialise_cross_sections(NeutralData* neutral_data, Mesh* mesh);
 
 // Initialises all of the neutral-specific data structures.
-void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
-  const int pad = mesh->pad;
-  const int local_nx = mesh->local_nx - 2 * pad;
-  const int local_ny = mesh->local_ny - 2 * pad;
+void initialise_neutral_data(NeutralData* neutral_data, Mesh& mesh) {
+  const int pad = mesh.pad;
+  const int local_nx = mesh.local_nx - 2 * pad;
+  const int local_ny = mesh.local_ny - 2 * pad;
 
   neutral_data->nparticles =
       get_int_parameter("nparticles", neutral_data->neutral_params_filename);
@@ -37,10 +37,10 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   }
 
   // The last four keys are the bound specification
-  const double source_xpos = values[nkeys - 4] * mesh->width;
-  const double source_ypos = values[nkeys - 3] * mesh->height;
-  const double source_width = values[nkeys - 2] * mesh->width;
-  const double source_height = values[nkeys - 1] * mesh->height;
+  const double source_xpos = values[nkeys - 4] * mesh.width;
+  const double source_ypos = values[nkeys - 3] * mesh.height;
+  const double source_width = values[nkeys - 2] * mesh.width;
+  const double source_height = values[nkeys - 1] * mesh.height;
 
   Kokkos::View<double*> mesh_edgex_0;
   Kokkos::View<double*> mesh_edgey_0;
@@ -53,10 +53,10 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   allocate_data(mesh_edgey_1, 1);
 
   Kokkos::parallel_for(1, KOKKOS_LAMBDA (int pp) {
-    mesh_edgex_0[0] = mesh->edgex[mesh->x_off + pad];
-    mesh_edgey_0[0] = mesh->edgey[mesh->y_off + pad];
-    mesh_edgex_1[0] = mesh->edgex[local_nx + mesh->x_off + pad];
-    mesh_edgey_1[0] = mesh->edgey[local_ny + mesh->y_off + pad];
+    mesh_edgex_0[0] = mesh.edgex[mesh.x_off + pad];
+    mesh_edgey_0[0] = mesh.edgey[mesh.y_off + pad];
+    mesh_edgex_1[0] = mesh.edgex[local_nx + mesh.x_off + pad];
+    mesh_edgey_1[0] = mesh.edgey[local_ny + mesh.y_off + pad];
   });
 
   Kokkos::View<double*>::HostMirror rank_xpos_0;
@@ -121,10 +121,10 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh* mesh) {
   if (neutral_data->nlocal_particles) {
     printf("Allocated %.4fGB of data.\n", allocation / GB);
     allocation += inject_particles(
-        neutral_data->nparticles, mesh->global_nx, mesh->local_nx,
-        mesh->local_ny, pad, local_particle_left_off, local_particle_bottom_off,
-        local_particle_width, local_particle_height, mesh->x_off, mesh->y_off,
-        mesh->dt, mesh->edgex, mesh->edgey, neutral_data->initial_energy,
+        neutral_data->nparticles, mesh.global_nx, mesh.local_nx,
+        mesh.local_ny, pad, local_particle_left_off, local_particle_bottom_off,
+        local_particle_width, local_particle_height, mesh.x_off, mesh.y_off,
+        mesh.dt, mesh.edgex, mesh.edgey, neutral_data->initial_energy,
         &neutral_data->local_particles);
   }
 

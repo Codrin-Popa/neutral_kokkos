@@ -12,7 +12,7 @@ size_t allocate_data(Kokkos::View<double*>& buf, size_t len) {
         return 0;
     }
 
-    buf = Kokkos::View<double*>("device", len);
+    new(&buf) Kokkos::View<double*>("device", len);
     Kokkos::parallel_for(len, KOKKOS_LAMBDA (int i) {
         buf[i] = 0.0;
     });
@@ -26,7 +26,7 @@ size_t allocate_float_data(Kokkos::View<float*>& buf, size_t len) {
         return 0;
     }
 
-    buf = Kokkos::View<float*>("device", len);
+    new(&buf) Kokkos::View<float*>("device", len);
     Kokkos::parallel_for(len, KOKKOS_LAMBDA (int i) {
         buf[i] = 0.0f;
     });
@@ -41,7 +41,7 @@ size_t allocate_int_data(Kokkos::View<int*>& buf, size_t len) {
         return 0;
     }
 
-    buf = Kokkos::View<int*>("device", len);
+    new(&buf) Kokkos::View<int*>("device", len);
     Kokkos::parallel_for(len, KOKKOS_LAMBDA (int i) {
         buf[i] = 0;
     });
@@ -55,7 +55,7 @@ size_t allocate_uint64_data(Kokkos::View<uint64_t*>& buf, size_t len) {
         return 0;
     }
 
-    buf = Kokkos::View<uint64_t*>("device", len);
+    new(&buf) Kokkos::View<uint64_t*>("device", len);
     Kokkos::parallel_for(len, KOKKOS_LAMBDA (int i) {
         buf[i] = 0;
     });
@@ -90,7 +90,7 @@ void allocate_host_data(Kokkos::View<double*>::HostMirror& buf, const size_t len
         return;
     }
 
-    buf = Kokkos::View<double*>::HostMirror("host", len);
+    new(&buf) Kokkos::View<double*>::HostMirror("host", len);
     
     for (size_t ii = 0; ii < len; ++ii) {
         buf[ii] = 0.0;
@@ -103,7 +103,7 @@ void allocate_host_float_data(Kokkos::View<float*>::HostMirror& buf, const size_
         return;
     }
 
-    buf = Kokkos::View<float*>::HostMirror("host", len);
+    new(&buf) Kokkos::View<float*>::HostMirror("host", len);
     
     for (size_t ii = 0; ii < len; ++ii) {
         buf[ii] = 0.0f;
@@ -115,7 +115,7 @@ void allocate_host_int_data(Kokkos::View<int*>::HostMirror& buf, const size_t le
         return;
     }
 
-    buf = Kokkos::View<int*>::HostMirror("host", len);
+    new(&buf) Kokkos::View<int*>::HostMirror("host", len);
     
     for (size_t ii = 0; ii < len; ++ii) {
         buf[ii] = 0;
@@ -127,7 +127,7 @@ void allocate_host_uint64_t_data(Kokkos::View<uint64_t*>::HostMirror& buf, const
         return;
     }
 
-    buf = Kokkos::View<uint64_t*>::HostMirror("host", len);
+    new(&buf) Kokkos::View<uint64_t*>::HostMirror("host", len);
     
     for (size_t ii = 0; ii < len; ++ii) {
         buf[ii] = 0;
