@@ -64,10 +64,10 @@ int main(int argc, char *argv[])
   // Perform the general initialisation steps for the mesh etc
   initialise_devices(mesh.rank);
   initialise_comms(&mesh);
-  initialise_mesh_2d(&mesh);
+  initialise_mesh_2d(mesh);
   SharedData shared_data;
   initialise_shared_data_2d(mesh.local_nx, mesh.local_ny, mesh.pad, mesh.width, 
-      mesh.height, neutral_data.neutral_params_filename, mesh.edgex, mesh.edgey, &shared_data);
+      mesh.height, neutral_data.neutral_params_filename, mesh.edgex, mesh.edgey, shared_data);
 
   handle_boundary_2d(mesh.local_nx, mesh.local_ny, &mesh, shared_data.density,
                      NO_INVERT, PACK);
