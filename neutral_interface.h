@@ -40,7 +40,7 @@ size_t inject_particles(const int nparticles, const int global_nx,
     const Kokkos::View<double *> edgex,
     const Kokkos::View<double *> edgey,
     const double initial_energy,
-    Particle** particles);
+    Particle &particles);
 
 
 // Validates the results of the simulation

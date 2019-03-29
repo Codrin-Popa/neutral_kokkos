@@ -29,6 +29,12 @@ int main(int argc, char *argv[])
   // Store the dimensions of the mesh
   Mesh mesh;
   NeutralData neutral_data;
+
+  &neutral_data.particles = (Particle*)malloc(sizeof(Particle));
+  if (!&neutral_data.particles) {
+    TERMINATE("Could not allocate particle array.\n");
+  }
+
   neutral_data.neutral_params_filename = argv[1];
   mesh.global_nx =
       get_int_parameter("nx", neutral_data.neutral_params_filename);
@@ -71,7 +77,7 @@ int main(int argc, char *argv[])
   handle_boundary_2d(mesh.local_nx, mesh.local_ny, &mesh, shared_data.density,
                      NO_INVERT, PACK);
  
-  initialise_neutral_data(&neutral_data, mesh);
+  initialise_neutral_data(neutral_data, mesh);
 
   // Make sure initialisation phase is complete
   barrier();

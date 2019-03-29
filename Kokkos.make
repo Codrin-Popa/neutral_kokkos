@@ -26,7 +26,7 @@ Available targets are:
   GPU
 endef
 $(info $(target_help))
-TARGET=CPU
+TARGET=GPU
 endif
 
 ifeq ($(TARGET), GPU)
@@ -36,10 +36,10 @@ endif
 OBJ = main.o params.o profiler.o comms.o shared_kokkos.o shared.o data.o mesh.o shared_data.o halos.o neutral.o neutral_data.o
 
 neutral.kokkos: $(OBJ) $(KOKKOS_CPP_DEPENDS)
-	$(CXX) $(KOKKOS_LDFLAGS) -DKOKKOS -O3 $(EXTRA_FLAGS) $(OBJ) $(KOKKOS_LIBS) -o $@
+	$(CXX) $(KOKKOS_LDFLAGS) -DKOKKOS -g -O3 $(EXTRA_FLAGS) $(OBJ) $(KOKKOS_LIBS) -o $@
 
 %.o: %.cpp
-	$(CXX) $(KOKKOS_CPPFLAGS) $(KOKKOS_CXXFLAGS) -DKOKKOS -O3 $(EXTRA_FLAGS) -c $<
+	$(CXX) $(KOKKOS_CPPFLAGS) $(KOKKOS_CXXFLAGS) -DKOKKOS -g -O3 $(EXTRA_FLAGS) -c $<
 
 .PHONY: clean
 clean:

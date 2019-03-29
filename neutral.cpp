@@ -730,38 +730,39 @@ size_t inject_particles(const int nparticles, const int global_nx,
                         const Kokkos::View<double *> edgex,
                         const Kokkos::View<double *> edgey,
                         const double initial_energy,
-                        Particle** particles) {
+                        Particle &particles) {
 
-  *particles = (Particle*)malloc(sizeof(Particle));
-  if (!*particles) {
-    TERMINATE("Could not allocate particle array.\n");
-  }
+  // *particles = (Particle*)malloc(sizeof(Particle));
+  // if (!*particles) {
+  //   TERMINATE("Could not allocate particle array.\n");
+  // }
 
-  Particle* particle = *particles;
+  // Particle* particle = *particles;
   size_t allocation = 0;
-  allocation += allocate_data(particle->x, nparticles * 1.5);
-  allocation += allocate_data(particle->y, nparticles * 1.5);
-  allocation += allocate_data(particle->omega_x, nparticles * 1.5);
-  allocation += allocate_data(particle->omega_y, nparticles * 1.5);
-  allocation += allocate_data(particle->energy, nparticles * 1.5);
-  allocation += allocate_data(particle->weight, nparticles * 1.5);
-  allocation += allocate_data(particle->dt_to_census, nparticles * 1.5);
-  allocation += allocate_data(particle->mfp_to_collision, nparticles * 1.5);
-  allocation += allocate_int_data(particle->cellx, nparticles * 1.5);
-  allocation += allocate_int_data(particle->celly, nparticles * 1.5);
-  allocation += allocate_int_data(particle->dead, nparticles * 1.5);
+  allocation += allocate_data(particles.x, nparticles * 1.5);
+  exit(0);
+  allocation += allocate_data(particles.y, nparticles * 1.5);
+  allocation += allocate_data(particles.omega_x, nparticles * 1.5);
+  allocation += allocate_data(particles.omega_y, nparticles * 1.5);
+  allocation += allocate_data(particles.energy, nparticles * 1.5);
+  allocation += allocate_data(particles.weight, nparticles * 1.5);
+  allocation += allocate_data(particles.dt_to_census, nparticles * 1.5);
+  allocation += allocate_data(particles.mfp_to_collision, nparticles * 1.5);
+  allocation += allocate_int_data(particles.cellx, nparticles * 1.5);
+  allocation += allocate_int_data(particles.celly, nparticles * 1.5);
+  allocation += allocate_int_data(particles.dead, nparticles * 1.5);
  
-  Kokkos::View<double *> p_x = particle->x;
-  Kokkos::View<double *> p_y = particle->y;
-  Kokkos::View<double *> p_omega_x = particle->omega_x;
-  Kokkos::View<double *> p_omega_y = particle->omega_y;
-  Kokkos::View<double *> p_energy = particle->energy;
-  Kokkos::View<double *> p_weight = particle->weight;
-  Kokkos::View<double *> p_dt_to_census = particle->dt_to_census;
-  Kokkos::View<double *> p_mfp_to_collision = particle->mfp_to_collision;
-  Kokkos::View<int *> p_cellx = particle->cellx;
-  Kokkos::View<int *> p_celly = particle->celly;
-  Kokkos::View<int *> p_dead = particle->dead;
+  Kokkos::View<double *> p_x = particles.x;
+  Kokkos::View<double *> p_y = particles.y;
+  Kokkos::View<double *> p_omega_x = particles.omega_x;
+  Kokkos::View<double *> p_omega_y = particles.omega_y;
+  Kokkos::View<double *> p_energy = particles.energy;
+  Kokkos::View<double *> p_weight = particles.weight;
+  Kokkos::View<double *> p_dt_to_census = particles.dt_to_census;
+  Kokkos::View<double *> p_mfp_to_collision = particles.mfp_to_collision;
+  Kokkos::View<int *> p_cellx = particles.cellx;
+  Kokkos::View<int *> p_celly = particles.celly;
+  Kokkos::View<int *> p_dead = particles.dead;
 
  
   START_PROFILING(&compute_profile);

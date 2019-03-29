@@ -16,24 +16,24 @@ void read_cs_file(const char* filename, CrossSection* cs, Mesh& mesh);
 void initialise_cross_sections(NeutralData* neutral_data, Mesh& mesh);
 
 // Initialises all of the neutral-specific data structures.
-void initialise_neutral_data(NeutralData* neutral_data, Mesh& mesh) {
+void initialise_neutral_data(NeutralData& neutral_data, Mesh& mesh) {
   const int pad = mesh.pad;
   const int local_nx = mesh.local_nx - 2 * pad;
   const int local_ny = mesh.local_ny - 2 * pad;
 
-  neutral_data->nparticles =
-      get_int_parameter("nparticles", neutral_data->neutral_params_filename);
-  neutral_data->initial_energy = get_double_parameter(
-      "initial_energy", neutral_data->neutral_params_filename);
+  neutral_data.nparticles =
+      get_int_parameter("nparticles", neutral_data.neutral_params_filename);
+  neutral_data.initial_energy = get_double_parameter(
+      "initial_energy", neutral_data.neutral_params_filename);
 
   int nkeys = 0;
   char* keys = (char*)malloc(sizeof(char) * MAX_KEYS * MAX_STR_LEN);
   double* values = (double*)malloc(sizeof(double) * MAX_KEYS);
 
-  if (!get_key_value_parameter_double("source", neutral_data->neutral_params_filename,
+  if (!get_key_value_parameter_double("source", neutral_data.neutral_params_filename,
                                keys, values, &nkeys)) {
     TERMINATE("Parameter file %s did not contain a source entry.\n",
-              neutral_data->neutral_params_filename);
+              neutral_data.neutral_params_filename);
   }
 
   // The last four keys are the bound specification
@@ -100,37 +100,37 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh& mesh) {
   // Calculate the number of particles we need based on the shaded area that
   // is covered by our source
   const double nlocal_particles_real =
-      neutral_data->nparticles *
+      neutral_data.nparticles *
       (local_particle_width * local_particle_height) /
       (source_width * source_height);
 
   // Rounding hack to make sure correct number of particles is selected
-  neutral_data->nlocal_particles = nlocal_particles_real + 0.5;
+  neutral_data.nlocal_particles = nlocal_particles_real + 0.5;
 
-  size_t allocation = allocate_data(neutral_data->energy_deposition_tally,
+  size_t allocation = allocate_data(neutral_data.energy_deposition_tally,
                                     local_nx * local_ny);
 
-  allocation += allocate_uint64_data(neutral_data->nfacets_reduce_array,
-                                     neutral_data->nparticles);
-  allocation += allocate_uint64_data(neutral_data->ncollisions_reduce_array,
-                                     neutral_data->nparticles);
-  allocation += allocate_uint64_data(neutral_data->nprocessed_reduce_array,
-                                     neutral_data->nparticles);
+  allocation += allocate_uint64_data(neutral_data.nfacets_reduce_array,
+                                     neutral_data.nparticles);
+  allocation += allocate_uint64_data(neutral_data.ncollisions_reduce_array,
+                                     neutral_data.nparticles);
+  allocation += allocate_uint64_data(neutral_data.nprocessed_reduce_array,
+                                     neutral_data.nparticles);
 
   // Inject some particles into the mesh if we need to
-  if (neutral_data->nlocal_particles) {
+  if (neutral_data.nlocal_particles) {
     printf("Allocated %.4fGB of data.\n", allocation / GB);
     allocation += inject_particles(
-        neutral_data->nparticles, mesh.global_nx, mesh.local_nx,
+        neutral_data.nparticles, mesh.global_nx, mesh.local_nx,
         mesh.local_ny, pad, local_particle_left_off, local_particle_bottom_off,
         local_particle_width, local_particle_height, mesh.x_off, mesh.y_off,
-        mesh.dt, mesh.edgex, mesh.edgey, neutral_data->initial_energy,
-        &neutral_data->local_particles);
+        mesh.dt, mesh.edgex, mesh.edgey, neutral_data.initial_energy,
+        neutral_data.local_particles);
   }
 
   printf("Allocated %.4fGB of data.\n", allocation / GB);
 
-  initialise_cross_sections(neutral_data, mesh);
+  initialise_cross_sections(&neutral_data, mesh);
 }
 
 // Reads in a cross-sectional data file
