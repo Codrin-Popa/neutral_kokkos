@@ -127,6 +127,6 @@ inline void microscopic_cs_for_energy(Kokkos::View<const double *> keys,
                                  const double p_energy,
                                  int* cs_index, double* cs);
 
-inline void generate_random_numbers(const uint64_t pkey, const uint64_t master_key,
+ KOKKOS_INLINE_FUNCTION void generate_random_numbers(const uint64_t pkey, const uint64_t master_key,
                              const uint64_t counter, double* rn0, double* rn1);
 

@@ -127,7 +127,7 @@ void initialise_neutral_data(NeutralData& neutral_data, Mesh& mesh) {
         mesh.dt, mesh.edgex, mesh.edgey, neutral_data.initial_energy,
         neutral_data.local_particles);
   }
-
+  
   printf("Allocated %.4fGB of data.\n", allocation / GB);
 
   initialise_cross_sections(neutral_data, mesh);
@@ -150,7 +150,7 @@ void read_cs_file(const char* filename, CrossSection& cs, Mesh& mesh) {
   }
 
   if (mesh.rank == MASTER) {
-    printf("File %s contains %d entries\n", filename, cs->nentries);
+    printf("File %s contains %d entries\n", filename, cs.nentries);
   }
 
   rewind(fp);

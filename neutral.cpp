@@ -814,13 +814,13 @@ size_t inject_particles(const int nparticles, const int global_nx,
     p_dead[pp] = 0;
 
   });
-
+  Kokkos::fence();
   STOP_PROFILING(&compute_profile, "initialising particles");
 
   return allocation;
 }
 
-inline void generate_random_numbers(const uint64_t pkey,
+ KOKKOS_INLINE_FUNCTION void generate_random_numbers(const uint64_t pkey,
                                const uint64_t master_key,
                                const uint64_t counter,
                                double* rn0,
