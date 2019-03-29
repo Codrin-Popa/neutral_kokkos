@@ -84,7 +84,7 @@ struct handle_particles {
                     Kokkos::View<const double *> edgedx,
                     Kokkos::View<const double *> edgedy,
                     const int ntotal_particles,
-                    Particle* particles_start,
+                    Particle &particles_start,
                     const Kokkos::View<double *> cs_scatter_keys,
                     const Kokkos::View<double *> cs_scatter_values,
                     const int cs_scatter_nentries,
@@ -252,24 +252,24 @@ void solve_transport_2d(
     const int nx, const int ny, const int global_nx, const int global_ny,
     const uint64_t master_key, const int pad, const int x_off, const int y_off, 
     const double dt, const int ntotal_particles,
-    int* nparticles,
+    int &nparticles,
     const int* neighbours,
-    Particle* particles,
+    Particle &particles,
     Kokkos::View<const double *> density,
     Kokkos::View<const double *> edgex,
     Kokkos::View<const double *> edgey,
     Kokkos::View<const double *> edgedx,
     Kokkos::View<const double *> edgedy,
-    CrossSection* cs_scatter_table,
-    CrossSection* cs_absorb_table,
+    CrossSection &cs_scatter_table,
+    CrossSection &cs_absorb_table,
     const Kokkos::View<double *> energy_deposition_tally,
     Kokkos::View<uint64_t *> reduce_array0,
     Kokkos::View<uint64_t *> reduce_array1,
     Kokkos::View<uint64_t *> reduce_array2,
-    uint64_t* facet_events,
-    uint64_t* collision_events) {
+    uint64_t &facet_events,
+    uint64_t &collision_events) {
 
-  if (!(*nparticles)) {
+  if (!(nparticles)) {
     printf("Out of particles\n");
     return;
   }
@@ -277,12 +277,12 @@ void solve_transport_2d(
   // Reduction struct
   handle_particles::value_type result;
 
-  const Kokkos::View<double *> cs_scatter_keys = cs_scatter_table->keys;
-  const Kokkos::View<double *> cs_scatter_values = cs_scatter_table->values;
-  const int cs_scatter_nentries = cs_scatter_table->nentries;
-  const Kokkos::View<double *> cs_absorb_keys = cs_absorb_table->keys;
-  const Kokkos::View<double *> cs_absorb_values = cs_absorb_table->values;
-  const int cs_absorb_nentries = cs_absorb_table->nentries;
+  const Kokkos::View<double *> cs_scatter_keys = cs_scatter_table.keys;
+  const Kokkos::View<double *> cs_scatter_values = cs_scatter_table.values;
+  const int cs_scatter_nentries = cs_scatter_table.nentries;
+  const Kokkos::View<double *> cs_absorb_keys = cs_absorb_table.keys;
+  const Kokkos::View<double *> cs_absorb_values = cs_absorb_table.values;
+  const int cs_absorb_nentries = cs_absorb_table.nentries;
 
 
   // Call reduction
@@ -292,15 +292,15 @@ void solve_transport_2d(
                       cs_scatter_values, cs_scatter_nentries, cs_absorb_keys,
                       cs_absorb_values, cs_absorb_nentries, energy_deposition_tally);
   
-  Kokkos::parallel_reduce("reduction", *nparticles, f, result);
+  Kokkos::parallel_reduce("reduction", nparticles, f, result);
 
   Kokkos::fence();
 
 
-  *facet_events += result.facets;
-  *collision_events += result.collisions;
+  facet_events += result.facets;
+  collision_events += result.collisions;
 
-  printf("Particles  %llu\n", *nparticles);
+  printf("Particles  %llu\n", nparticles);
 
 }
 

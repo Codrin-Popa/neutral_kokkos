@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
   int tt;
   double wallclock = 0.0;
   double elapsed_sim_time = 0.0;
-/*  for (tt = 1; tt <= mesh.niters; ++tt) {
+  for (tt = 1; tt <= mesh.niters; ++tt) {
 
     if (mesh.rank == MASTER) {
       printf("\nIteration  %d\n", tt);
@@ -101,13 +101,13 @@ int main(int argc, char *argv[])
     solve_transport_2d(
         mesh.local_nx - 2 * mesh.pad, mesh.local_ny - 2 * mesh.pad,
         mesh.global_nx, mesh.global_ny, tt, mesh.pad, mesh.x_off, mesh.y_off,
-        mesh.dt, neutral_data.nparticles, &neutral_data.nlocal_particles,
+        mesh.dt, neutral_data.nparticles, neutral_data.nlocal_particles,
         mesh.neighbours, neutral_data.local_particles,
         shared_data.density, mesh.edgex, mesh.edgey, mesh.edgedx, mesh.edgedy,
         neutral_data.cs_scatter_table, neutral_data.cs_absorb_table,
         neutral_data.energy_deposition_tally, neutral_data.nfacets_reduce_array,
         neutral_data.ncollisions_reduce_array, neutral_data.nprocessed_reduce_array,
-        &facet_events, &collision_events);
+        facet_events, collision_events);
 
     barrier();
 
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     printf("Final Wallclock %.9fs\n", wallclock);
     printf("Elapsed Simulation Time %.6fs\n", elapsed_sim_time);
   }
-  */
+  
   }
   Kokkos::finalize();
 
