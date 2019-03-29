@@ -60,8 +60,8 @@ typedef struct {
 
 // Contains the configuration and state data for the application
 typedef struct {
-  CrossSection* cs_scatter_table;
-  CrossSection* cs_absorb_table;
+  CrossSection cs_scatter_table;
+  CrossSection cs_absorb_table;
   Particle local_particles;
 
   double initial_energy;
