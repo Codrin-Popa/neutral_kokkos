@@ -288,7 +288,7 @@ void solve_transport_2d(
   // Call reduction
   handle_particles f(global_nx, global_ny, nx, ny, master_key, pad, x_off, y_off,
                       1, dt, neighbours, density, edgex, edgey, edgedx, edgedy,
-                      ntotal_particles, particles, cs_scatter_keys,
+                      ntotal_particles, &particles, cs_scatter_keys,
                       cs_scatter_values, cs_scatter_nentries, cs_absorb_keys,
                       cs_absorb_values, cs_absorb_nentries, energy_deposition_tally);
   
