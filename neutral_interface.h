@@ -14,7 +14,7 @@ void solve_transport_2d(
     const double dt, const int ntotal_particles,
     int &nparticles,
     const int* neighbours,
-    Particle* particles,
+    Particle &particles,
     Kokkos::View<const double *> density,
     Kokkos::View<const double *> edgex,
     Kokkos::View<const double *> edgey,
@@ -26,8 +26,8 @@ void solve_transport_2d(
     Kokkos::View<uint64_t *> reduce_array0,
     Kokkos::View<uint64_t *> reduce_array1,
     Kokkos::View<uint64_t *> reduce_array2,
-    uint64_t* facet_events,
-    uint64_t* collision_events);
+    uint64_t &facet_events,
+    uint64_t &collision_events);
 
 // Initialises a new particle ready for tracking
 size_t inject_particles(const int nparticles, const int global_nx,
