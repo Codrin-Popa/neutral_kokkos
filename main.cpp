@@ -30,11 +30,6 @@ int main(int argc, char *argv[])
   Mesh mesh;
   NeutralData neutral_data;
 
-  &neutral_data.particles = (Particle*)malloc(sizeof(Particle));
-  if (!&neutral_data.particles) {
-    TERMINATE("Could not allocate particle array.\n");
-  }
-
   neutral_data.neutral_params_filename = argv[1];
   mesh.global_nx =
       get_int_parameter("nx", neutral_data.neutral_params_filename);
@@ -86,7 +81,7 @@ int main(int argc, char *argv[])
   int tt;
   double wallclock = 0.0;
   double elapsed_sim_time = 0.0;
-  for (tt = 1; tt <= mesh.niters; ++tt) {
+/*  for (tt = 1; tt <= mesh.niters; ++tt) {
 
     if (mesh.rank == MASTER) {
       printf("\nIteration  %d\n", tt);
@@ -159,7 +154,7 @@ int main(int argc, char *argv[])
     printf("Final Wallclock %.9fs\n", wallclock);
     printf("Elapsed Simulation Time %.6fs\n", elapsed_sim_time);
   }
-
+  */
   }
   Kokkos::finalize();
 

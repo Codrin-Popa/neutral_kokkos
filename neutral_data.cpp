@@ -149,7 +149,7 @@ void read_cs_file(const char* filename, CrossSection* cs, Mesh& mesh) {
     }
   }
 
-  if (mesh->rank == MASTER) {
+  if (mesh.rank == MASTER) {
     printf("File %s contains %d entries\n", filename, cs->nentries);
   }
 

@@ -740,7 +740,6 @@ size_t inject_particles(const int nparticles, const int global_nx,
   // Particle* particle = *particles;
   size_t allocation = 0;
   allocation += allocate_data(particles.x, nparticles * 1.5);
-  exit(0);
   allocation += allocate_data(particles.y, nparticles * 1.5);
   allocation += allocate_data(particles.omega_x, nparticles * 1.5);
   allocation += allocate_data(particles.omega_y, nparticles * 1.5);
