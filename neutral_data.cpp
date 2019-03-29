@@ -134,7 +134,7 @@ void initialise_neutral_data(NeutralData* neutral_data, Mesh& mesh) {
 }
 
 // Reads in a cross-sectional data file
-void read_cs_file(const char* filename, CrossSection* cs, Mesh& mesh) {
+void read_cs_file(const char* filename, CrossSection& cs, Mesh& mesh) {
   FILE* fp = fopen(filename, "r");
   if (!fp) {
     TERMINATE("Could not open the cross section file: %s\n", filename);
@@ -142,32 +142,32 @@ void read_cs_file(const char* filename, CrossSection* cs, Mesh& mesh) {
 
   // Count the number of entries in the file
   int ch;
-  cs->nentries = 0;
+  cs.nentries = 0;
   while ((ch = fgetc(fp)) != EOF) {
     if (ch == '\n') {
       cs->nentries++;
     }
   }
 
-  if (mesh->rank == MASTER) {
-    printf("File %s contains %d entries\n", filename, cs->nentries);
+  if (mesh.rank == MASTER) {
+    printf("File %s contains %d entries\n", filename, cs.nentries);
   }
 
   rewind(fp);
 
   Kokkos::View<double*>::HostMirror h_keys;
   Kokkos::View<double*>::HostMirror h_values;
-  allocate_host_data(h_keys, cs->nentries);
-  allocate_host_data(h_values, cs->nentries);
+  allocate_host_data(h_keys, cs.nentries);
+  allocate_host_data(h_values, cs.nentries);
 
-  for (int ii = 0; ii < cs->nentries; ++ii) {
+  for (int ii = 0; ii < cs.nentries; ++ii) {
     // Skip whitespace tokens
     while ((ch = fgetc(fp)) == ' ' || ch == '\n' || ch == '\r') {
     };
 
     // Jump out if we reach the end of the file early
     if (ch == EOF) {
-      cs->nentries = ii;
+      cs.nentries = ii;
       break;
     }
 
@@ -179,14 +179,14 @@ void read_cs_file(const char* filename, CrossSection* cs, Mesh& mesh) {
     fscanf(fp, "%lf", &h_values[ii]);
   }
 
-  move_host_buffer_to_device(cs->nentries, h_keys, cs->keys);
-  move_host_buffer_to_device(cs->nentries, h_values, cs->values);
+  move_host_buffer_to_device(cs.nentries, h_keys, cs.keys);
+  move_host_buffer_to_device(cs.nentries, h_values, cs.values);
 }
 
 // Initialises the state
-void initialise_cross_sections(NeutralData* neutral_data, Mesh& mesh) {
-  neutral_data->cs_scatter_table = (CrossSection*)malloc(sizeof(CrossSection));
-  neutral_data->cs_absorb_table = (CrossSection*)malloc(sizeof(CrossSection));
-  read_cs_file(CS_SCATTER_FILENAME, neutral_data->cs_scatter_table, mesh);
-  read_cs_file(CS_CAPTURE_FILENAME, neutral_data->cs_absorb_table, mesh);
+void initialise_cross_sections(NeutralData& neutral_data, Mesh& mesh) {
+  neutral_data.cs_scatter_table = (CrossSection*)malloc(sizeof(CrossSection));
+  neutral_data.cs_absorb_table = (CrossSection*)malloc(sizeof(CrossSection));
+  read_cs_file(CS_SCATTER_FILENAME, neutral_data.cs_scatter_table, mesh);
+  read_cs_file(CS_CAPTURE_FILENAME, neutral_data.cs_absorb_table, mesh);
 }

@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
   handle_boundary_2d(mesh.local_nx, mesh.local_ny, &mesh, shared_data.density,
                      NO_INVERT, PACK);
  
-  initialise_neutral_data(&neutral_data, mesh);
+  initialise_neutral_data(neutral_data, mesh);
 
   // Make sure initialisation phase is complete
   barrier();
