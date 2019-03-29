@@ -83,7 +83,7 @@ typedef struct {
 
 
 // Initialises all of the Neutral-specific data structures.
-void initialise_neutral_data(NeutralData& neutral_data, Mesh& mesh);
+void initialise_neutral_data(NeutralData* neutral_data, Mesh& mesh);
 
 
 #if 0
