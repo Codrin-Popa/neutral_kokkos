@@ -21,6 +21,23 @@ size_t allocate_data(Kokkos::View<double*>& buf, size_t len) {
     return sizeof(double) * len;
 }
 
+size_t allocate_data_atomic(
+    Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>>& buf,
+    size_t len) {
+
+    if(len == 0) {
+        return 0;
+    }
+
+    buf = Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>>("device", len);
+    Kokkos::parallel_for(len, KOKKOS_LAMBDA (int i) {
+        buf[i] = 0.0;
+    });
+    Kokkos::fence();
+ 
+    return sizeof(double) * len;
+}
+
 size_t allocate_float_data(Kokkos::View<float*>& buf, size_t len) {
     if(len == 0) {
         return 0;

@@ -64,6 +64,9 @@ void initialise_devices(int rank);
 
 // Allocation and deallocation routines (these need templating away)
 size_t allocate_data(Kokkos::View<double*>& buf, size_t len);
+size_t allocate_data_atomic(
+    Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>>& buf,
+    size_t len);
 size_t allocate_float_data(Kokkos::View<float*>& buf, size_t len);
 size_t allocate_int_data(Kokkos::View<int*>& buf, size_t len);
 size_t allocate_uint64_data(Kokkos::View<uint64_t*>& buf, const size_t len);

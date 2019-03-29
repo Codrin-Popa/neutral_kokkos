@@ -71,7 +71,7 @@ typedef struct {
   int nlocal_particles;
 
   double* scalar_flux_tally;
-  Kokkos::View<double *> energy_deposition_tally;
+  Kokkos::View<double *, Kokkos::MemoryTraits<Kokkos::Atomic>>> energy_deposition_tally;
 
   const char* neutral_params_filename;
 

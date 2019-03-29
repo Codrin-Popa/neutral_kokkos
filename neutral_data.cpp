@@ -107,7 +107,7 @@ void initialise_neutral_data(NeutralData& neutral_data, Mesh& mesh) {
   // Rounding hack to make sure correct number of particles is selected
   neutral_data.nlocal_particles = nlocal_particles_real + 0.5;
 
-  size_t allocation = allocate_data(neutral_data.energy_deposition_tally,
+  size_t allocation = allocate_data_atomic(neutral_data.energy_deposition_tally,
                                     local_nx * local_ny);
 
   allocation += allocate_uint64_data(neutral_data.nfacets_reduce_array,
