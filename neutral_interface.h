@@ -22,7 +22,7 @@ void solve_transport_2d(
     Kokkos::View<const double *> edgedy,
     CrossSection &cs_scatter_table,
     CrossSection &cs_absorb_table,
-    const Kokkos::View<double *> energy_deposition_tally,
+    const Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>> energy_deposition_tally,
     Kokkos::View<uint64_t *> reduce_array0,
     Kokkos::View<uint64_t *> reduce_array1,
     Kokkos::View<uint64_t *> reduce_array2,

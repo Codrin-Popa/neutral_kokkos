@@ -64,7 +64,7 @@ struct handle_particles {
 
 
 
-  const Kokkos::View<double *>  energy_deposition_tally;
+  const Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>>  energy_deposition_tally;
 
   Kokkos::View<const double *> cs_scatter_table_keys;
   Kokkos::View<const double *> cs_scatter_table_values;
@@ -91,7 +91,7 @@ struct handle_particles {
                     const Kokkos::View<double *> cs_absorb_keys,
                     const Kokkos::View<double *> cs_absorb_values,
                     const int cs_absorb_nentries,
-                    const Kokkos::View<double *>  energy_deposition_tally):
+                    const Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>>  energy_deposition_tally):
     global_nx(global_nx), global_ny(global_ny), nx(nx), ny(ny), master_key(master_key),
     pad(pad), x_off(x_off), y_off(y_off), initial(initial), dt(dt),
     neighbours(neighbours), density(density), edgex(edgex), edgey(edgey),
@@ -262,7 +262,7 @@ void solve_transport_2d(
     Kokkos::View<const double *> edgedy,
     CrossSection &cs_scatter_table,
     CrossSection &cs_absorb_table,
-    const Kokkos::View<double *> energy_deposition_tally,
+    const Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>> energy_deposition_tally,
     Kokkos::View<uint64_t *> reduce_array0,
     Kokkos::View<uint64_t *> reduce_array1,
     Kokkos::View<uint64_t *> reduce_array2,
@@ -335,7 +335,7 @@ int collision_event(
     double* microscopic_cs_absorb,
     double* macroscopic_cs_scatter,
     double* macroscopic_cs_absorb,
-    Kokkos::View<double *> energy_deposition_tally,
+    Kokkos::View<double *, Kokkos::MemoryTraits<Kokkos::Atomic>> energy_deposition_tally,
     int* scatter_cs_index,
     int* absorb_cs_index,
     double rn[NRANDOM_NUMBERS],
@@ -452,7 +452,7 @@ int facet_event(const int global_nx, const int global_ny, const int nx,
                 double* number_density,
                 double* microscopic_cs_scatter, double* microscopic_cs_absorb,
                 double* macroscopic_cs_scatter, double* macroscopic_cs_absorb,
-                Kokkos::View<double *> energy_deposition_tally,
+                Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>> energy_deposition_tally,
                 int* cellx,
                 int* celly,
                 double* local_density) {
@@ -545,7 +545,7 @@ void census_event(const int global_nx, const int nx, const int x_off,
                   double* number_density,
                   double* microscopic_cs_scatter,
                   double* microscopic_cs_absorb,
-                  Kokkos::View<double *> energy_deposition_tally) {
+                  Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>> energy_deposition_tally) {
 
  // We have not changed cell or energy level at this stage
   p_x[pp] += distance_to_census * p_omega_x[pp];
@@ -570,7 +570,7 @@ void update_tallies(const int nx, const int x_off, const int y_off,
                     const int p_cellx, const int p_celly,
                     const double inv_ntotal_particles,
                     const double energy_deposition,
-                    Kokkos::View<double *> energy_deposition_tally) {
+                    Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>> energy_deposition_tally) {
 
   const int cellx = p_cellx - x_off;
   const int celly = p_celly - y_off;
