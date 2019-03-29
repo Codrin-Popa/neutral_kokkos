@@ -99,11 +99,11 @@ struct handle_particles {
     cs_scatter_table_keys(cs_scatter_keys),  cs_scatter_table_values(cs_scatter_values), 
     cs_scatter_table_nentries(cs_scatter_nentries), cs_absorb_table_keys(cs_absorb_keys),
     cs_absorb_table_values(cs_absorb_values), cs_absorb_table_nentries(cs_absorb_nentries),
-    energy_deposition_tally(energy_deposition_tally), p_x(particles_start->x),
-    p_y(particles_start->y), p_omega_x(particles_start->omega_x),
-    p_omega_y(particles_start->omega_y), p_energy(particles_start->energy), p_weight(particles_start->weight),
-    p_dt_to_census(particles_start->dt_to_census), p_mfp_to_collision(particles_start->mfp_to_collision),
-    p_cellx(particles_start->cellx), p_celly(particles_start->celly), p_dead(particles_start->dead)
+    energy_deposition_tally(energy_deposition_tally), p_x(&particles_start.x),
+    p_y(&particles_start.y), p_omega_x(&particles_start.omega_x),
+    p_omega_y(&particles_start.omega_y), p_energy(&particles_start.energy), p_weight(&particles_start.weight),
+    p_dt_to_census(&particles_start.dt_to_census), p_mfp_to_collision(&particles_start.mfp_to_collision),
+    p_cellx(&particles_start.cellx), p_celly(&particles_start.celly), p_dead(&particles_start.dead)
     {}
 
 
