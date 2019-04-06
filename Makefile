@@ -5,16 +5,16 @@ include $(KOKKOS_PATH)/Makefile.kokkos
 
 ifndef COMPILER
 define compiler_help
-Set COMPILER to change flags (defaulting to GNU).
+Set COMPILER to change flags (defaulting to GCC).
 Available compilers are:
-  GNU INTEL
+  GCC INTEL
 
 endef
 $(info $(compiler_help))
-COMPILER=GNU
+COMPILER=GCC
 endif
 
-COMPILER_GNU = g++
+COMPILER_GCC = g++
 COMPILER_INTEL = icpc -qopt-streaming-stores=always
 COMPILER_CLANG = clang++ -march=native 
 
