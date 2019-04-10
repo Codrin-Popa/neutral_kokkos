@@ -14,9 +14,9 @@ $(info $(compiler_help))
 COMPILER=GCC
 endif
 
-COMPILER_GCC = g++
-COMPILER_INTEL = icpc -qopt-streaming-stores=always
-COMPILER_CLANG = clang++ -march=native 
+COMPILER_GCC = g++ -ffast-math -ffp-contract=fast
+COMPILER_INTEL = icpc -qopenmp -no-prec-div
+COMPILER_CLANG = clang++ -march=native -ffast-math -ffp-contract=fast
 
 CXX = $(COMPILER_$(COMPILER))
 
@@ -38,10 +38,10 @@ endif
 OBJ = main.o params.o profiler.o comms.o shared_kokkos.o shared.o data.o mesh.o shared_data.o halos.o neutral.o neutral_data.o
 
 neutral.kokkos: $(OBJ) $(KOKKOS_CPP_DEPENDS)
-	$(CXX) $(KOKKOS_LDFLAGS) -DKOKKOS -O3 -ffast-math -ffp-contract=fast $(EXTRA_FLAGS) $(OBJ) $(KOKKOS_LIBS) -o $@
+	$(CXX) $(KOKKOS_LDFLAGS) -DKOKKOS -O3 $(EXTRA_FLAGS) $(OBJ) $(KOKKOS_LIBS) -o $@
 
 %.o: %.cpp
-	$(CXX) $(KOKKOS_CPPFLAGS) $(KOKKOS_CXXFLAGS) -DKOKKOS -O3 -ffast-math -ffp-contract=fast $(EXTRA_FLAGS) -c $<
+	$(CXX) $(KOKKOS_CPPFLAGS) $(KOKKOS_CXXFLAGS) -DKOKKOS -O3 $(EXTRA_FLAGS) -c $<
 
 .PHONY: clean
 clean:
