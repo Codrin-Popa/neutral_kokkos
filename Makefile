@@ -16,7 +16,7 @@ endif
 
 COMPILER_GCC = g++ -ffast-math -ffp-contract=fast
 COMPILER_INTEL = icpc -qopenmp -no-prec-div
-COMPILER_CLANG = clang++ -march=native -ffast-math -ffp-contract=fast
+COMPILER_CLANG = clang++ -ffast-math -ffp-contract=fast
 
 CXX = $(COMPILER_$(COMPILER))
 
